@@ -9,7 +9,17 @@
 <title>Story of diary</title>
 <link rel="stylesheet" type="text/css" href="{% static 'css/default.css' %}" media="screen" />
 <link rel="stylesheet" type="text/css" href="{% static 'css/print.css' %}" media="print" />
-<script src="{% static 'datePlugin.js' %}"></script>
+<script>
+function check_form(){
+    var title=document.getElementById("title");
+    var content=document.getElementById("content");
+    if(title.value=='' || content.value=='')alert("标题和内容不能为空");
+    else {
+        var form=document.getElementById("new_diary");
+        form.submit();
+    }
+}
+</script>
 </head>
 <body>
 <div id="view">
@@ -20,7 +30,7 @@
       <h1>日记故事</a></h1>
       <h2>test version</a></h2>
       <div id="search">
-            <h2>已登录：{{user_name}}</h2> 
+            <h2>已登录：{{name}}</h2> 
             <h2><a href="/private/signOut">注销</a></h2>
       </div>
     </div>
@@ -49,18 +59,18 @@
     <div id="contentBlock">
       <!-- #cols 50:50 -->
 	  <a href={{url}}>返回</a>
-      <form action="{% url 'private_edit' d_id%}" method="post">
+      <form action="{% url 'private_edit' d_id%}" method="post" id="new_diary">
 {% csrf_token %}
-      标题： <textarea rows="1" cols="15" style=" font-size:22px; resize:none" name="title" >
+      标题： <textarea rows="1" cols="15" style=" font-size:22px; resize:none" name="title" id="title">
 {{diary_title}}
 </textarea><br>
-<textarea rows="10" cols="40" style=" font-size:22px; resize:none" name= "content">
+<textarea rows="10" cols="40" style=" font-size:22px; resize:none" name= "content" id="content">
 {{content}}
 </textarea><br>
-公开?<input type="checkbox" value="1" name="check_box"/>
+公开?<input type="checkbox" value="1" name="checkbox"/>
 <p>{{mess}}</p><br>
-<input type="submit" value="保存"/> 
-<input type="submit" value="删除" name="delete"/> 
+<input type="button" value="保存" onclick="check_form()" style="width:100px;height:25px;line-height:18px;font-size:18px;border-radius: 3px; background: #1E90FF;color: white;border-width: 0px; cursor: pointer; "/> 
+<input type="submit" value="删除" name="delete" style="width:100px;height:25px;line-height:18px;font-size:18px;border-radius: 3px; background: #C0C0C0;color: white;border-width: 0px; cursor: pointer; "/> 
 </form>
       </ul>
       <div class="col2">
@@ -75,7 +85,7 @@
         <h3>个人信息</h3>
         <div class="img"><img src={{img.url}} width="56" alt="" /></div>
         <div class="self">
-          <p class="last">用户名：{{user}}<br />
+          <p class="last">用户名：{{name}}<br />
             年龄:&nbsp;{{age}}&nbsp;岁<br />
             生日：{{year}}-{{month}}-{{day}}<br/>
             性别：{{sex}}<br/>
